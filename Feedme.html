@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="feedme.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBiJmrqlqvU01Z_FP3ilAj7x_cces63Hz4&callback=initMap&v=weekly" defer></script> -->
+
+    <!-- <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBiJmrqlqvU01Z_FP3ilAj7x_cces63Hz4&libraries=places&callback=initMap"></script> -->
+
+    <!-- <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBiJmrqlqvU01Z_FP3ilAj7x_cces63Hz4&libraries=places&marker&v=beta&callback=initMap"></script> -->
+    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBiJmrqlqvU01Z_FP3ilAj7x_cces63Hz4&libraries=places,geometry&callback=initMap"></script>
+
+    <title>FeedMe</title>
+
+    
+</head>
+<body>
+    <header>
+        <div class="logo-container">            
+            <p class="logo-text">feedme.</p>
+        </div>
+        <div class="search-icon-container">
+            <img class="search-img" src="search.png">
+        </div>
+        <!-- <div class="search-btn-container">                
+            <button class="search-btn" type="button">Search</button>                
+        </div>     -->
+    </header>
+    <div class="container">
+        
+        
+        <div class="search-container opacity-none display-none">
+            <div class="search-box-row close-container">
+                <div class="close"></div>
+            </div>
+            <div class="search-box-row heading-container">
+                <h2>Search</h2>
+            </div>
+            <div class="search-box-row intro-text-container">
+                <p class="intro-text">
+                    Input an address or area and we'll show you what's tasty.
+                </p>
+            </div>
+            
+            <input id="searchTextField" type="text" size="50">
+
+        </div>
+
+        
+
+        <div class="welcome-container opacity-one">            
+            <div class="search-box-row heading-container">
+                <h2>Welcome to feedme. </h2>
+            </div>
+            <div class="search-box-row intro-text-container">
+                <p class="intro-text">
+                    To unlock places to eat around you use your location or search an address.
+                </p>
+            </div>
+            
+            <div class="search-box-row option-button-container">
+                <button class="option-btn location-btn">Use My Location</button><button class="option-btn search-btn">Search an Address</button>
+            </div>
+            <!-- <input id="searchTextField" type="text" size="50">                 -->
+        </div>
+
+        <div class="text-container" draggable="true">
+            <div class="text-info">
+                <p class="info-text">
+                    Test
+                </p>
+                <button class="show-bounding-markers" type="button">Show Bounding Markers</button>
+                <button class="hide-bounding-markers" type="button">Hide Bounding Markers</button>
+                <br>
+                <button class="show-circles" type="button">Show Circles</button>
+                <button class="hide-circles" type="button">Hide Circles</button>                
+            </div>    
+        </div>  
+        <!-- <div class="top-teeth">
+            <div class="button-container">                
+                <button class="search-btn" type="button">Search</button>                
+            </div>    
+            <div class="top-tooth"></div>            
+        </div>
+
+        <div class="bottom-teeth">            
+            <div class="bottom-tooth"></div>            
+        </div> -->
+        
+        <!-- <div class="text-container">
+
+            <div class="text-info">                
+                <button class="search-btn" type="button">Search</button>                
+            </div>    
+        </div>       --> 
+
+
+        <div class="map-container">            
+            <div id="map"></div> 
+
+            <!-- <div id="search-box">
+                <div class="close-container">
+                    <div class="close"></div>
+                </div>
+                
+                <p>
+                    Welcome to FeedMe. <br>
+                    To see places to eat around you either click allow so we know where to look or insert an address
+                </p>
+                <input id="searchTextField" type="text" size="50">                
+            </div> -->
+
+        </div>  
+    </div>
+    
+    <script type="text/javascript" src="styles.js"></script>
+    <script type="text/javascript" src="feedme.js"></script>
+
+</body>
+</html>
