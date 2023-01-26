@@ -28,6 +28,7 @@ p {
 header {
     display: flex;
     height: 5.4vh;    
+    align-items: center;
 }
 
 .logo-container {
@@ -139,7 +140,8 @@ input#searchTextField {
     font-size: 1.2rem;
     font-family: 'Signika', sans-serif;
     background: rgba(0, 0, 0, 0);
-    border: solid 2px;
+    border: solid 2px black;
+    color : black;
     cursor: pointer;
 }
 
@@ -340,9 +342,9 @@ input#searchTextField {
     padding: 0 !important;    
 }
 
-.gm-style .gm-style-iw-d {
+/* .gm-style .gm-style-iw-d {
     overflow: hidden !important;
-}
+} */
 
 button.gm-ui-hover-effect {
     margin: 1rem 0.7rem 1rem 0rem !important;
@@ -532,15 +534,6 @@ button.gm-ui-hover-effect span {
     z-index: -1;
 }
 
-@media only screen and (max-width: 425px) {
-    .left-nav-pane {
-      margin-left : 0.7rem;
-    }
-    .right-nav-pane {
-        margin-right : 0.7rem;
-    }
-  }
-
 /* End of my slider css */
 
 .review-slide-container{    
@@ -570,3 +563,87 @@ p.review-author-text {
     margin-top: 0.5rem;
     font-size: 0.8rem;
 }
+
+/* Media Queries */
+
+@media only screen and (max-width: 1440px) {
+    header {
+        height : 4vh;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+
+    .left-nav-pane {
+      margin-left : 0.7rem;
+    }
+    
+    .right-nav-pane {
+        margin-right : 0.7rem;
+    }
+
+}
+
+@media only screen and (max-width: 1366px) {
+    .logo-text {
+        font-size: 2.2rem;
+        line-height: 2rem;
+    }
+
+    .search-icon-container {
+        padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    }
+
+    .search-img {
+        width: 15%;
+    }
+
+    h2 {
+        font-size: 2rem;
+    }
+
+    .intro-text {
+        font-size: 1.2rem;
+        line-height: 1.4rem;
+        text-align: center;
+    }
+
+    .option-btn {
+        line-height: 1rem;
+        border: solid 2px black;     
+    }
+
+    .welcome-container {
+        width : 80vw;
+    }
+
+    input#searchTextField {
+        width : 90%;
+    }
+
+    .search-container {
+        width: 80vw;
+    }
+
+    .info-box {
+        width: unset;
+        height: 475px;
+    }
+
+    .right-nav-pane {
+        right: 0.5rem;
+    }
+
+    .nav-button-container {
+        width: 25px;
+        height: 25px;
+    }
+
+    .review-slider-container .nav-pane {
+        top: 122px;
+    }
+
+    .search-icon-container {
+        align-items: center;
+    }
+  }

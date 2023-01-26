@@ -874,8 +874,8 @@ function getPlaceInfo(placeId)
             
             setupGallery();
             setupReviews();
-            let leftNav = document.querySelector('.left-gall').addEventListener('click', handleGalleryLeftNav);
-            let rightNav = document.querySelector('.right-gall').addEventListener('click', handleGalleryRightNav);
+            let leftNav = document.querySelector('.left-nav-pane').querySelector('.nav-button-container').addEventListener('click', handleGalleryLeftNav);
+            let rightNav = document.querySelector('.right-nav-pane').querySelector('.nav-button-container').addEventListener('click', handleGalleryRightNav);
 
             let leftRNav = document.querySelector('.left-review-arrow').addEventListener('click', handleReviewLeftNav);
             let rightRNav = document.querySelector('.right-review-arrow').addEventListener('click', handleReviewRightNav);
@@ -1094,13 +1094,8 @@ function handleLocationServicesClick()
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     toggler(welcomeContainer, 'opacity-one');
     toggler(welcomeContainer, 'display-none');
-
-    /* welcomeContainer.classList.toggle("opacity-one");
-    welcomeContainer.addEventListener('transitionend', () => {            
-        welcomeContainer.classList.toggle("display-none");           
-    }); */
-
 }
+
 // "Use My Location" click event handling
 engageLocationServiceBtn.addEventListener('click', handleLocationServicesClick);
 
@@ -1132,18 +1127,6 @@ closeSearchBtn.addEventListener('click', () => {
 
     toggler(searchContainer, 'opacity-one');
     toggler(searchContainer, 'display-none');
-    
-    /* setTimeout(() => {
-        searchContainer.classList.toggle("opacity-one");
-        searchContainer.classList.toggle("display-none");
-    
-        
-    }, 250); */
-    /* searchContainer.classList.toggle("opacity-one");
-    searchContainer.addEventListener('transitionend', () => {
-        searchContainer.classList.toggle("display-none");
-        
-    }); */
 });
 
 searchIconContainer.addEventListener('click', () => {        
@@ -1152,30 +1135,5 @@ searchIconContainer.addEventListener('click', () => {
         toggler(searchContainer, 'opacity-one');
         toggler(searchContainer, 'display-none');
     }
-    
-    /* searchIconContainer.addEventListener('transitionend', () => {
-        console.log('welcome container has fadedout');                
-        toggler(welcomeContainer, "display-none")
-        toggler(searchContainer, "opacity-one")                
-    }); */
-
 });
 
-/* let topTeethContainer = document.querySelector('.top-teeth');
-let bottomTeethContainer = document.querySelector('.bottom-teeth');
-
-let topTooth = document.querySelector('.top-tooth');
-let bottomTooth = document.querySelector('.bottom-tooth');
-
-
-// let newTooth = tooth.cloneNode(true);
-// console.log(newTooth);
-// topTeethContainer.insertAdjacentElement('beforeend', newTooth);
-for (let i = 0; i < 5; i++)
-{
-    let newTopTooth = topTooth.cloneNode(true);
-    let newBottomTooth = bottomTooth.cloneNode(true);
-
-    topTeethContainer.insertAdjacentElement('beforeend', newTopTooth);
-    bottomTeethContainer.insertAdjacentElement('beforeend', newBottomTooth);
-} */
