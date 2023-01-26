@@ -19,8 +19,6 @@ const errorCallback = (error) => {
         toggler(welcomeContainer, 'opacity-one');
         toggler(welcomeContainer, 'display-none');    
     }, 500);        
-    console.log(error);
-    console.log('The user rejected the coordinate prompt');        
 };
 
 // Goes to the searched address via autocomplete
@@ -33,6 +31,8 @@ function goToSearchedAddress(geolocationCoordinate, currentZoom)
         setupTheMap()
         });
 }
+
+// This was designed to simulate a zoom out and then back in experience.
 
 function moveToCoordinates(coordinates, currentZoom) {
     
@@ -47,20 +47,15 @@ function moveToCoordinates(coordinates, currentZoom) {
             counter += 2;
 
             if (counter < 14)
-            {
-                // console.log('if counter < 14 true');
+            {             
                 counter += 2;
                 map.setZoom(counter);
             }
             else
             {
-                // console.log('else has been called');
                 clearInterval(timerVar);                
                 resolve();
             }
-
-            // console.log('count after if below 14 check');
-            // console.log(counter);
 
         }, 2000); 
     });
@@ -134,6 +129,9 @@ function midPointCalc(coordinateOne, coordinateTwo)
     return (coordinateOne + coordinateTwo) / 2;
 }
 
+// Google only sends back a max 60 results - I had to then create zones around the initial search point so I could generate more results.
+// This was done by calculating 8 'zones' around the central zone.
+
 function setCoordinates(map)
 {
         let northEastlat = map.getBounds().getNorthEast().lat();
@@ -163,6 +161,8 @@ function setCoordinates(map)
 
 let mapMarkers = [];
 
+// Used initially for the calculating of the other zones
+
 function setBoundingMarkers(map, coordinates)
 {
     let coordinatesKeys = Object.keys(coordinates);
@@ -180,6 +180,7 @@ function setBoundingMarkers(map, coordinates)
 }
 
 // send an array of latlngbounds and this function will place them on the map with the defined radius
+
 let circles = [];
 function setCircles(latLngBounds, radius)  
 {
@@ -200,6 +201,8 @@ function setCircles(latLngBounds, radius)
 }
 
 let latLngBounds = [];
+
+
 
 function setSearchZones(map, coordinates)
 {
@@ -235,7 +238,9 @@ function setSearchZones(map, coordinates)
     latLngBounds = [zoneZeroLatLngBounds, zoneOneLatLngBounds, zoneTwoLatLngBounds, zoneThreeLatLngBounds, zoneFourLatLngBounds,zoneFiveLatLngBounds ,zoneSixLatLngBounds];
 }
 
-// created search object
+// This was used to determine how far the current location is from the next searched address. This would determine how much the map
+// would zoom out before zooming back in. User experience.
+
 function createSearchObject(coordinates)
 {
     return new Promise(function(resolve, reject) {
@@ -245,9 +250,7 @@ function createSearchObject(coordinates)
 
         geocodeData.then((results) =>
         {
-            results.results.forEach(result => {
-                /* console.log(result);
-                console.log(result.types); */
+            results.results.forEach(result => {                
                 
                 if (result.types.includes('country'))
                 {
@@ -262,9 +265,6 @@ function createSearchObject(coordinates)
                     resultObject.city = result.formatted_address;                                                
                 }
             }) 
-            // console.log(resultObject);
-
-            // resolve( results.results); 
             resolve( resultObject); 
         })
         .catch((err) => 
@@ -275,68 +275,62 @@ function createSearchObject(coordinates)
     
 }
 
+// Moves map to given coordinates after zooming out.
+
 function moveMap(coordinates)
 {
     
     return new Promise(function(resolve, reject) {
 
         map.setCenter(coordinates);
-        map.addListener("idle", () => {         
-            console.log('map idle');
+        map.addListener("idle", () => {                     
             resolve();
         });
 
     });
 }
 
+// Zoom map out from the current zoom to a zoom level determined by distance. A closer next location wouldn't zoom out as far as if the
+// user's next search was in another country.
+
 function zoomMapOut(zoomTo)
 {
-    
     let currentMapZoom = map.getZoom();
-    console.log('current zoom');
-    console.log(currentMapZoom);
-
     let counter = currentMapZoom;
+
     return new Promise(function(resolve, reject) {
 
         let timerVar = setInterval(function(){            
         
             if (counter - 3 < zoomTo)
-            {
-                console.log('if we minuse again we go lower thatn ' + zoomTo);
+            {                
                 map.setZoom(zoomTo);                    
                 clearInterval(timerVar);                        
                 resolve();
                 
             }
             else if (counter > zoomTo)
-            {
-                // console.log('if counter < 14 true');
+            {            
                 counter -= 3;
                 map.setZoom(counter);                    
             }           
-
-            // console.log('count after if below 14 check');
-            // console.log(counter);
 
         }, 1500);
     });
 }
 
+// Zoom map in to determined zoom level
+
 function zoomMapIn(zoomTo)
 {
-    console.log('zoomMapIn called');
     let currentMapZoom = map.getZoom();
-    console.log('current zoom');
-    console.log(currentMapZoom);
-
     let counter = currentMapZoom;
+
     return new Promise(function(resolve, reject) {
         let timerVar = setInterval(function(){            
             
             if (counter + 3 > zoomTo)
-            {
-                console.log('if we minuse again we go lower thatn ' + zoomTo);
+            {                
                 map.setZoom(zoomTo);                    
                 clearInterval(timerVar);  
                 resolve();                      
@@ -345,43 +339,35 @@ function zoomMapIn(zoomTo)
             }
             else if (counter < zoomTo)
             {
-                // console.log('if counter < 14 true');
                 counter += 3;
                 map.setZoom(counter);                    
             }           
-
-            // console.log('count after if below 14 check');
-            // console.log(counter);
 
         }, 1500);
     })   
 }
 
+// Part of the process to determine where the next location is thus determining how far to zoom the map out.
+
 function determineZoomOutLevel(currentLocation, nextLocation, distanceBetween)
 {
-    console.log(currentLocation);
-    console.log(nextLocation);
-
-    console.log(distanceBetween + ' kms' );
-
     if (currentLocation.country != nextLocation.country)
     {
-        console.log('diff country zoom out to 3');
         return 3;
     }
     else if (currentLocation.province != nextLocation.province)
     {
-        console.log('country SAME but provnice difference figure out province zoom');
         return 8;
     }
     else if (currentLocation.city != nextLocation.city)
     {
         return 10;
-        console.log('country and province SAME but local city is not figure out city zoon');
     }
-
-    
 }
+
+
+// This function starts the entire process of moving to a new location. This is very much a user experience item and actually serves
+// little purpose other than experience.
 
 function handleNewLocationSearch(currentCoordinates, searchedCoordinates)
 {
@@ -455,8 +441,7 @@ function initMap()
     currentLocationZoom = map.getZoom();
 
     map.addListener("zoom_changed", () => {
-        currentLocationZoom = map.getZoom();
-        console.log(currentLocationZoom);
+        currentLocationZoom = map.getZoom();        
     });
 
     /* map.addListener("idle", () => {         
@@ -522,10 +507,10 @@ function getSearchData(results, status, pagination)
             delay(2000);
             pagination.nextPage();
         }
-        else if (! pagination.hasNextPage)
+        /* else if (! pagination.hasNextPage)
         {
-            console.log('there is NO next page');
-        }
+            
+        } */
     }  
 }
 
@@ -542,17 +527,13 @@ let printArrayCount = 0;
 function printArray(theArray)
 {
     printArrayCount++
-    // console.log(`Print array called ${printArrayCount} times`);
-    // console.log(theArray);
 }
 
 
 
 // let infowindow = new google.maps.InfoWindow({});
 
-function getRating(ratingNumber) {   
-    console.log('called');
-    console.log(ratingNumber);
+function getRating(ratingNumber) {       
     let stringRating = ratingNumber.toString();
     let firstPortion, secondPortion;
     
@@ -561,15 +542,13 @@ function getRating(ratingNumber) {
  
     let starGradient = [];
     if (starGradient[0] !== 5)
-    {
-        console.log('not five');
+    {        
         starGradient[0] = parseInt(firstPortion);
         starGradient[1] = parseInt(secondPortion);
         starGradient[2] = parseInt(secondPortion) * 10;    
     }
     else if (starGradient[0] !== 5)
-    {
-        console.log('is five');
+    {        
         starGradient[0] = parseInt(firstPortion);
     }
     
@@ -582,8 +561,6 @@ function getRating(ratingNumber) {
 
 function handleGalleryLeftNav()
 {
-    console.log('left nav clicked');
-
     if (activeIndex - 1 < min)
     {
         activeIndex = max;
@@ -592,8 +569,6 @@ function handleGalleryLeftNav()
     {
         activeIndex -= 1;
     }
-
-    console.log('current slide is ' + activeIndex);
 
     if (activeIndex - 1 < min)
     {
@@ -613,9 +588,6 @@ function handleGalleryLeftNav()
         rightSlideIndex = activeIndex + 1;
     }
 
-    console.log('left slide index ' + leftSlideIndex);
-    console.log('right slide index ' + rightSlideIndex);
-
     slides[rightSlideIndex].classList.add('right-slide');
     slides[rightSlideIndex].classList.remove('active-slide');
 
@@ -628,8 +600,6 @@ function handleGalleryLeftNav()
 
 function handleGalleryRightNav()
 {
-    console.log('right nav clicked');
-
     if (activeIndex + 1 > max)
     {
         activeIndex = 0;
@@ -639,8 +609,6 @@ function handleGalleryRightNav()
         activeIndex += 1;
     }
 
-    console.log('current slide index ' + activeIndex);
-    
     if ( activeIndex - 1 < min) 
     {
         leftSlideIndex = max;
@@ -658,9 +626,6 @@ function handleGalleryRightNav()
     {
         rightSlideIndex = activeIndex + 1;
     }
-    
-    console.log('left slide index ' + leftSlideIndex);
-    console.log('right slide index ' + rightSlideIndex);
 
     slides[leftSlideIndex].classList.remove('active-slide');
     slides[leftSlideIndex].classList.add('left-slide');
@@ -699,9 +664,7 @@ function setupGallery()
 // handling the review gallery left and right interactions
 
 function handleReviewLeftNav()
-{
-    console.log('left nav clicked');
-
+{    
     if (activeRIndex - 1 < minR)
     {
         activeRIndex = maxR;
@@ -710,8 +673,6 @@ function handleReviewLeftNav()
     {
         activeRIndex -= 1;
     }
-
-    console.log('current slide is ' + activeRIndex);
 
     if (activeRIndex - 1 < minR)
     {
@@ -731,9 +692,6 @@ function handleReviewLeftNav()
         rightRSlideIndex = activeRIndex + 1;
     }
 
-    console.log('left R slide index ' + leftRSlideIndex);
-    console.log('right R slide index ' + rightRSlideIndex);
-
     reviews[rightRSlideIndex].classList.add('right-review');
     reviews[rightRSlideIndex].classList.remove('active-review');
 
@@ -746,8 +704,6 @@ function handleReviewLeftNav()
 
 function handleReviewRightNav()
 {
-    console.log('right nav clicked');
-
     if (activeRIndex + 1 > maxR)
     {
         activeRIndex = 0;
@@ -756,8 +712,6 @@ function handleReviewRightNav()
     {
         activeRIndex += 1;
     }
-
-    console.log('current slide index ' + activeRIndex);
     
     if ( activeRIndex - 1 < minR) 
     {
@@ -776,9 +730,6 @@ function handleReviewRightNav()
     {
         rightRSlideIndex = activeRIndex + 1;
     }
-    
-    console.log('left review index ' + leftRSlideIndex);
-    console.log('right review index ' + rightRSlideIndex);
 
     reviews[leftRSlideIndex].classList.remove('active-review');
     reviews[leftRSlideIndex].classList.add('left-review');
@@ -788,9 +739,6 @@ function handleReviewRightNav()
 
     reviews[rightRSlideIndex].classList.add('right-review');
     reviews[rightRSlideIndex].classList.remove('left-review');
-
-    /* slides[max].classList.add('right-slide');
-    slides[max].classList.remove('left-slide'); */
 }
 
 let activeRIndex = 0;
@@ -803,8 +751,6 @@ let rightRSlideIndex = 0;
 function setupReviews()
 {
     reviews = document.querySelectorAll('.review-slide');
-    console.log(reviews);
-
     maxR = reviews.length - 1;
     reviews[0].classList.add('active-review');
     reviews[1].classList.add('right-review');    
@@ -820,8 +766,6 @@ function setupReviews()
 
 function getPlaceInfo(placeId)
 {
-    console.log(`getPlaceInfo called with ${placeId}`);
-
     let request = {
         placeId: placeId,
         fields: ['formatted_address', 'formatted_phone_number', 'url', 'reviews', 'photos', 'website']
@@ -836,8 +780,6 @@ function getPlaceInfo(placeId)
         if (status == google.maps.places.PlacesServiceStatus.OK) {
             
             let reviews = "";
-            
-            console.log(results);
 
             results.reviews.forEach(review => {                
                 reviews += '<div class="review-slide">' +
@@ -881,9 +823,6 @@ function getPlaceInfo(placeId)
 
 
             let rightRNav = document.querySelector('.review-slider-container').querySelector('.right-nav-pane').querySelector('.nav-button-container').addEventListener('click', handleReviewRightNav);
-
-            // console.log(results);
-
         }});
 }
 
@@ -991,15 +930,12 @@ let theMarker;
 function handleData(results)
 {
     
-    // console.log('handle data called');
-    // console.log(results)
-    results.forEach(result => {
-        // console.log(result);
+    
+    results.forEach(result => {    
         if (result.hasOwnProperty('rating'))
         {
             if (result.hasOwnProperty('photos'))
-            {
-                console.log('this result has both review and a photo');
+            {                
                 totalResultCount++;
                 
                 let location = result.geometry.location;
@@ -1027,8 +963,7 @@ function handleData(results)
         }
         
         
-    })
-    // console.log(resultCount);
+    })    
     printArray(totalResults)
     textInfo.innerHTML = `Total Results = ${totalResultCount} Unique Results = ${uniqueResultCount}`;
 }
@@ -1038,10 +973,8 @@ window.initMap = initMap;
 
 let hideCirclesBtn = document.querySelector('.hide-circles');
 
-hideCirclesBtn.addEventListener('click', () => {
-    console.log('click');
-    // console.log(mapMarkers[0].advancedMarkerViewObject.scale = 0);
-    //hideMarkers(map, coordinates)
+hideCirclesBtn.addEventListener('click', () => {    
+    
     for (const circle of circles)
     {            
         circle.setOptions({
@@ -1054,13 +987,10 @@ hideCirclesBtn.addEventListener('click', () => {
 
 let showCirclesBtn = document.querySelector('.show-circles');
 
-showCirclesBtn.addEventListener('click', () => {
-    console.log('click');
-    // console.log(mapMarkers[0].advancedMarkerViewObject.scale = 0);
-    //hideMarkers(map, coordinates)
+showCirclesBtn.addEventListener('click', () => {    
     for (const circle of circles)
     {
-        console.log(circle);
+        
         circle.setOptions({
             fillOpacity: 0.35,
             strokeOpacity: 0.8
@@ -1115,8 +1045,7 @@ engageSearchBtn.addEventListener('click', () => {
     toggler(searchContainer, "opacity-none");       
     toggler(searchContainer, "display-none");    
 
-    welcomeContainer.addEventListener('transitionend', () => {
-        console.log('welcome container has fadedout');                
+    welcomeContainer.addEventListener('transitionend', () => {        
         toggler(welcomeContainer, "display-none");
         toggler(searchContainer, "opacity-one");              
     });
@@ -1124,8 +1053,7 @@ engageSearchBtn.addEventListener('click', () => {
 
 let closeSearchBtn = document.querySelector('.close-container');
 
-closeSearchBtn.addEventListener('click', () => {
-    console.log('click');
+closeSearchBtn.addEventListener('click', () => {   
 
     toggler(searchContainer, 'opacity-one');
     toggler(searchContainer, 'display-none');
