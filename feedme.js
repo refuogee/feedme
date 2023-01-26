@@ -877,8 +877,10 @@ function getPlaceInfo(placeId)
             let leftNav = document.querySelector('.left-nav-pane').querySelector('.nav-button-container').addEventListener('click', handleGalleryLeftNav);
             let rightNav = document.querySelector('.right-nav-pane').querySelector('.nav-button-container').addEventListener('click', handleGalleryRightNav);
 
-            let leftRNav = document.querySelector('.left-review-arrow').addEventListener('click', handleReviewLeftNav);
-            let rightRNav = document.querySelector('.right-review-arrow').addEventListener('click', handleReviewRightNav);
+            let leftRNav = document.querySelector('.review-slider-container').querySelector('.left-nav-pane').querySelector('.nav-button-container').addEventListener('click', handleReviewLeftNav);
+
+
+            let rightRNav = document.querySelector('.review-slider-container').querySelector('.right-nav-pane').querySelector('.nav-button-container').addEventListener('click', handleReviewRightNav);
 
             // console.log(results);
 

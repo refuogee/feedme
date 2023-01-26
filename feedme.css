@@ -439,6 +439,7 @@ button.gm-ui-hover-effect span {
     background: rgba(255,255,255, 0.5);
     width: 18px;
     height: 18px;
+    cursor: pointer;
 }
 
 .nav-button {
