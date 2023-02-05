@@ -35,7 +35,7 @@ function goToSearchedAddress(geolocationCoordinate, currentZoom)
 // This was designed to simulate a zoom out and then back in experience.
 
 function moveToCoordinates(coordinates, currentZoom) {
-    
+    sendMessageToIframe(2);
     return new Promise(function(resolve, reject) {
 
         map.setCenter(coordinates);
@@ -91,7 +91,7 @@ let intervalCount = 0;
 
 function searchTheZones(latLngBounds, map, radius)
 {
-    
+    sendMessageToIframe(3);
     // the below is used so we only work with one set of results
     
     /* let theRequest = {
@@ -106,7 +106,7 @@ function searchTheZones(latLngBounds, map, radius)
     newServiceRequest.nearbySearch(theRequest, getSearchData);  */
     
     
-     for (const latLng of latLngBounds)
+    for (const latLng of latLngBounds)
     {
         let theRequest = {
             location: latLng.getCenter(),                
@@ -836,7 +836,9 @@ function waitForElement(className, callback){
 }
 
 function showInfoWindow()
+
 {    
+    sendMessageToIframe(4);
     let thePlaceId = this.place_id;
     let gradientArray = getRating( this.rating );
     let starAmount='';
@@ -1021,7 +1023,8 @@ function toggler(element, theClassName)
 }
 
 function handleLocationServicesClick()
-{
+{    
+    sendMessageToIframe(1);
     interactionCount++;
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
     toggler(welcomeContainer, 'opacity-one');
@@ -1039,6 +1042,7 @@ let searchContainer = document.querySelector('.search-container');
 let searchIconContainer = document.querySelector('.search-icon-container');
 
 engageSearchBtn.addEventListener('click', () => {
+    sendMessageToIframe(1);
     interactionCount++;
 
     toggler(welcomeContainer, "opacity-one");
@@ -1067,3 +1071,24 @@ searchIconContainer.addEventListener('click', () => {
     }
 });
 
+/* 
+    Iframe Messaging Functionality
+*/
+
+    function sendMessageToIframe(section)
+    {
+        switch(section) {
+            case 1:                          
+                window.top.postMessage('first-message', '*');
+                break;            
+            case 2:                                
+                window.top.postMessage('second-message', '*');                
+                break;            
+            case 3:                                
+                window.top.postMessage('third-message', '*');                
+                break;            
+            case 4:                                
+                window.top.postMessage('fourth-message', '*');                
+                break;            
+            }
+    }
